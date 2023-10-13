@@ -3,6 +3,7 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class SimpleWebCrawler {
                         crawl(level++,next_link,visited);
                     }
                 }
+//                printPageContent(doc);
             }
         }
 
@@ -32,6 +34,17 @@ public class SimpleWebCrawler {
 //                System.out.println("Dhuksee");
                 System.out.println("Link:" + url);
                 System.out.println(doc.title());
+
+                //page content
+                Elements articleContent = doc.select("div span");
+                StringBuilder newsContent = new StringBuilder();
+                for (Element paragraph : articleContent) {
+                    newsContent.append(paragraph.text()).append("\n");
+                }
+                System.out.println("News Content:\n" + newsContent.toString());
+
+
+
                 v.add(url);
 
                 return doc;
@@ -42,4 +55,10 @@ public class SimpleWebCrawler {
             return null;
         }
     }
+
+    private static void printPageContent(Document doc) {
+        String pageContent = doc.text(); // .html() for the HTML content.
+        System.out.println("Page Content:\n" + pageContent);
+    }
+
 }

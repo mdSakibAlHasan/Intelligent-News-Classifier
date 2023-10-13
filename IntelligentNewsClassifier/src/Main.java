@@ -8,7 +8,7 @@ public class Main {
         System.out.printf("Hello and welcome to this news crawling!");
 
         SimpleWebCrawler SimpleCrawl = new SimpleWebCrawler();
-        String url ="https://en.wikipedia.org/";
+        String url ="https://en.prothomalo.com/business";
         SimpleCrawl.crawl(1,url,new ArrayList<String>());
 
 
