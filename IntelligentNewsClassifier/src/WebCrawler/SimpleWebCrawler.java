@@ -10,18 +10,22 @@ import java.util.ArrayList;
 
 public class SimpleWebCrawler {
     public static void crawl (int level,String url,String requiredURL, ArrayList<String> visited){
-        ArrayList<String> vl =  new ArrayList<String>();
+        ArrayList<String> lList=  new ArrayList<String>();
         if (url.contains(requiredURL)) {
             if (level <= 5) {
-                Document doc = request(url, visited,vl);
+                Document doc = request(url, visited);
 
                 if (doc != null) {
-                    for (Element link : doc.select("a[href]")) {
-                        String next_link = link.absUrl("href");
-                        if (visited.contains(next_link) == false) {
-                            crawl(level++, next_link,requiredURL, visited);
+                    Elements links = doc.select("a[href]");
+                    for (Element link : links) {
+                        String next_link = link.attr("href");
+                        next_link="https://www.thedailystar.net"+next_link;
+                        if(visited.contains(next_link) == false && next_link.contains("/sports/")){
+                                crawl(level++, next_link,requiredURL, visited);
+
                         }
                     }
+
                 }
             }
         }else {
@@ -30,7 +34,7 @@ public class SimpleWebCrawler {
 
     }
 
-    private static Document request(String url, ArrayList<String>v, ArrayList<String>vl){
+    private static Document request(String url, ArrayList<String>v){
         try{
             Connection con =Jsoup.connect(url);
             Document doc = con.get();
@@ -40,22 +44,30 @@ public class SimpleWebCrawler {
                 System.out.println(doc.title());
 
                 //page content
-                Elements articleContent = doc.select("div strong > p,div>p");
+                Elements articleContent = doc.select("div strong > p:not(.title), div > p:not(.title)");
                 StringBuilder newsContent = new StringBuilder();
                 for (Element paragraph : articleContent) {
                     newsContent.append(paragraph.text()).append("\n");
                 }
-
-                Elements links = doc.select("a[href]");
-                System.out.println("Links:");
-                for (Element link : links) {
-                    String linkHref = link.attr("href");
-                    if(vl.contains(linkHref)==false && linkHref.contains("/sports/")){
-                        vl.add(linkHref);
-                        System.out.println(linkHref);
-                    }
-                }
                 System.out.println("Prime Content:\n" + newsContent.toString());
+
+
+                //write on CSV file 
+                try (FileWriter writer = new FileWriter("output.csv");
+                     CSVWriter csvWriter = new CSVWriterBuilder(writer)
+                             .withSeparator(',')
+                             .withQuoteChar(CSVWriter.NO_QUOTE_CHARACTER)
+                             .build()) {
+
+                    // Write the data to the CSV file
+                    String[] row = new String[]{doc.title(), newsContent.toString()};
+                    csvWriter.writeNext(row);
+                }
+
+
+
+
+
 
 
 
