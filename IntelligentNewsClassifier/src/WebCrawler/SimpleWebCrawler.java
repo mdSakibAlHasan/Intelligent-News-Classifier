@@ -5,8 +5,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+
+//for CSV
+import com.opencsv.CSVWriter;
+import com.opencsv.CSVWriterBuilder;
+
+
+
 
 public class SimpleWebCrawler {
     public static void crawl (int level,String url,String requiredURL, ArrayList<String> visited){
@@ -52,27 +60,22 @@ public class SimpleWebCrawler {
                 System.out.println("Prime Content:\n" + newsContent.toString());
 
 
-                //write on CSV file 
-                try (FileWriter writer = new FileWriter("output.csv");
-                     CSVWriter csvWriter = new CSVWriterBuilder(writer)
-                             .withSeparator(',')
-                             .withQuoteChar(CSVWriter.NO_QUOTE_CHARACTER)
-                             .build()) {
+                //write on CSV file
+                try (FileWriter writer = new FileWriter("sportsNews.csv", true); // Open the file in append mode
+                     CSVWriter csvWriter = new CSVWriter(writer)) {
+
+                    // Format the news content
+                    String formattedContent = newsContent.toString().replace("\n", " ");
+//                    formattedContent = "\"" + formattedContent.replace("\"", "\"\"") + "\"";
 
                     // Write the data to the CSV file
-                    String[] row = new String[]{doc.title(), newsContent.toString()};
+                    String[] row = new String[]{doc.title(), formattedContent};
                     csvWriter.writeNext(row);
                 }
 
 
 
-
-
-
-
-
                 v.add(url);
-
                 return doc;
             }
             return null;
