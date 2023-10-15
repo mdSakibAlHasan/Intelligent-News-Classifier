@@ -370,62 +370,56 @@ class Stemmer
      * forcing lower case must be done outside the Stemmer class.
      * Usage: Stemmer file-name file-name ...
      */
-    public static void main(String[] args)
+    public String convertStemmer(String line)
     {
         char[] w = new char[501];
         Stemmer s = new Stemmer();
-        for (int i = 0; i < args.length; i++)
-            try
-            {
-                FileInputStream in = new FileInputStream(args[i]);
+        StringBuilder transformLine= new StringBuilder();
+        int index=0;
+        line += " ";
 
-                try
-                {
+            while(index<line.length()) {
+                int ch = line.charAt(index++);
+                if (Character.isLetter((char) ch)) {
+                    int j = 0;
                     while(true) {
-                        int ch = in.read();
-                        if (Character.isLetter((char) ch)) {
-                            int j = 0;
-                            while(true) {
-                                ch = Character.toLowerCase((char) ch);
-                                w[j] = (char) ch;
-                                if (j < 500)
-                                    j++;
-                                ch = in.read();
-                                if (!Character.isLetter((char) ch)) {
-                                    /* to test add(char ch) */
-                                    for (int c = 0; c < j; c++)
-                                        s.add(w[c]);
+                        ch = Character.toLowerCase((char) ch);
+                        w[j] = (char) ch;
+                        if (j < 500)
+                            j++;
+                        if(index<line.length())
+                            ch = line.charAt(index++);
+                        else
+                            break;
+                        if (!Character.isLetter((char) ch)) {
+                            /* to test add(char ch) */
+                            for (int c = 0; c < j; c++)
+                                s.add(w[c]);
 
-                                /* or, to test add(char[] w, int j) */
-                                /* s.add(w, j); */
+                        /* or, to test add(char[] w, int j) */
+                        /* s.add(w, j); */
 
-                                    s.stem();
-                                    {  String u;
+                            s.stem();
+                            {  String u;
 
-                                        /* and now, to test toString() : */
-                                        u = s.toString();
+                                /* and now, to test toString() : */
+                                u = s.toString();
 
-                                        /* to test getResultBuffer(), getResultLength() : */
-                                        /* u = new String(s.getResultBuffer(), 0, s.getResultLength()); */
+                                /* to test getResultBuffer(), getResultLength() : */
+                                /* u = new String(s.getResultBuffer(), 0, s.getResultLength()); */
 
-                                        System.out.print(u);
-                                    }
-                                    break;
+                                //System.out.print(u+"-");
+                                transformLine.append(u);
                             }
-                        }
+                            break;
                     }
-                    if (ch < 0) break;
-                    System.out.print((char)ch);
-                }
-                }
-                catch (IOException e)
-                {  System.out.println("error reading " + args[i]);
-                    break;
                 }
             }
-            catch (FileNotFoundException e)
-            {  System.out.println("file " + args[i] + " not found");
-                break;
-            }
+                transformLine.append((char) ch);
+                //System.out.println("++");
+        }
+        //System.out.println("Here");
+        //System.out.println(transformLine);
+        return String.valueOf(transformLine);
     }
 }
