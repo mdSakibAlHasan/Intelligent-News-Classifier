@@ -1,10 +1,6 @@
 package training;
 
-import com.opencsv.CSVReader;
-
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.*;
 
 public class ProcessData {
@@ -12,21 +8,22 @@ public class ProcessData {
     private  void readCSV(String file){
         try {
             Scanner sc = new Scanner(new File(file));
-            sc.useDelimiter(",");
+            String line;
+            sc.nextLine();
             int i=0;
             while (sc.hasNext())
             {
-                data[i/3][i%3] = sc.next();
-                System.out.print(data[i/3][i%3]+"  -----  "+i+"   ");
-                if(i<30)
+                line = sc.nextLine();
+                data[i] = line.split(",");
+                if(i<3)
                     i++;
                 else
                     break;
             }
             sc.close();
 
-            for(i=0;i<10;i++){
-                System.out.println(data[i][0]+" "+data[i][1]+" "+data[i][2]+"----------------------------------");
+            for(i=0;i<3;i++){
+                System.out.println(data[i][0]+" ## "+data[i][1]+" "+data[i][2]+"----------------------------------");
             }
         }
         catch (Exception e) {
@@ -35,26 +32,23 @@ public class ProcessData {
     }
 
     public void removeTags(int index) {
-        // Define a regular expression to match HTML tags
         String regex = "<[^>]*>";
-        data[index][1].replaceAll(regex, "");
+        data[index][1] = data[index][1].replaceAll(regex, "");
     }
 
     public void removePunctuationsSpecialCharsNumbers(int index) {
         // Use regular expression to remove punctuations, special characters, and numbers
         String regex = "[^a-zA-Z\\s]";
-        data[index][1].replaceAll(regex, "");
+        data[index][1] = data[index][1].replaceAll(regex, "");
     }
 
     public void convertToLower(int index) {
-        data[index][1].toLowerCase();
+        data[index][1] = data[index][1].toLowerCase();
     }
 
     public void removeStopwords(int index) {
-        // Define a set of English stopwords
         Set<String> stopWords = new HashSet<>(Arrays.asList("a", "an", "the", "and", "in", "on", "at", "to", "of", "for"));
 
-        // Tokenize the text and remove stopwords
         String[] words = data[index][1].split("\\s");
         List<String> filteredWords = new ArrayList<>();
         for (String word : words) {
@@ -69,19 +63,11 @@ public class ProcessData {
     public static void process(ProcessData processData) {
         for(int i=0;i<3;i++){
             processData.removeTags(i);
-            System.out.println("Text without tags: " + processData.data[1][1]);
-
-            // Remove punctuations, special characters, and numbers
-           processData.removePunctuationsSpecialCharsNumbers(i);
-            System.out.println("Cleaned text: " +  processData.data[1][1]);
-
-            // Convert to lowercase
+            processData.removePunctuationsSpecialCharsNumbers(i);
             processData.convertToLower(i);
-            System.out.println("Lowercase text: " +  processData.data[1][1]);
-
-            // Remove stopwords
             processData.removeStopwords(i);
-            System.out.println("Text without stopwords: " +  processData.data[1][1]);
+
+            System.out.println("Text wit processing: " +  processData.data[i][1]);
         }
     }
 
