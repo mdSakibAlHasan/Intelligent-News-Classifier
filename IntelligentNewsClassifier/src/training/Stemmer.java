@@ -64,12 +64,13 @@ class Stemmer
      * adding characters, you can call stem(void) to stem the word.
      */
 
-    public void add(char ch)
-    {  if (i == b.length)
-    {  char[] new_b = new char[i+INC];
-        for (int c = 0; c < i; c++) new_b[c] = b[c];
-        b = new_b;
-    }
+    public void add(char ch) {
+        if (i == b.length) {
+            char[] new_b = new char[i+INC];
+            for (int c = 0; c < i; c++)         //use library
+                new_b[c] = b[c];
+            b = new_b;
+        }
         b[i++] = ch;
     }
 
@@ -111,12 +112,12 @@ class Stemmer
 
     /* cons(i) is true <=> b[i] is a consonant. */
 
-    private final boolean cons(int i)
-    {  switch (b[i])
-    {  case 'a': case 'e': case 'i': case 'o': case 'u': return false;
-        case 'y': return (i==0) ? true : !cons(i-1);
-        default: return true;
-    }
+    private final boolean cons(int i) {
+        return switch (b[i]) {
+            case 'a', 'e', 'i', 'o', 'u' -> false;
+            case 'y' -> i == 0 || !cons(i - 1);
+            default -> true;
+        };
     }
 
    /* m() measures the number of consonant sequences between 0 and j. if c is
@@ -131,24 +132,32 @@ class Stemmer
    */
 
     private final int m()
-    {  int n = 0;
+    {
+        int n = 0;
         int i = 0;
-        while(true)
-        {  if (i > j) return n;
-            if (! cons(i)) break; i++;
+        while(true) {
+            if (i > j)
+                return n;
+            if (! cons(i))
+                break;
+            i++;
         }
         i++;
-        while(true)
-        {  while(true)
-        {  if (i > j) return n;
-            if (cons(i)) break;
-            i++;
-        }
+        while(true) {
+            while(true) {
+                if (i > j)
+                    return n;
+                if (cons(i))
+                    break;
+                i++;
+            }
             i++;
             n++;
-            while(true)
-            {  if (i > j) return n;
-                if (! cons(i)) break;
+            while(true) {
+                if (i > j)
+                    return n;
+                if (! cons(i))
+                    break;
                 i++;
             }
             i++;
@@ -157,16 +166,21 @@ class Stemmer
 
     /* vowelinstem() is true <=> 0,...j contains a vowel */
 
-    private final boolean vowelinstem()
-    {  int i; for (i = 0; i <= j; i++) if (! cons(i)) return true;
+    private final boolean vowelinstem() {
+        int i;
+        for (i = 0; i <= j; i++)
+            if (! cons(i))
+                return true;
         return false;
     }
 
     /* doublec(j) is true <=> j,(j-1) contain a double consonant. */
 
-    private final boolean doublec(int j)
-    {  if (j < 1) return false;
-        if (b[j] != b[j-1]) return false;
+    private final boolean doublec(int j) {
+        if (j < 1)
+            return false;
+        if (b[j] != b[j-1])
+            return false;
         return cons(j);
     }
 
@@ -179,19 +193,23 @@ class Stemmer
 
    */
 
-    private final boolean cvc(int i)
-    {  if (i < 2 || !cons(i) || cons(i-1) || !cons(i-2)) return false;
-        {  int ch = b[i];
-            if (ch == 'w' || ch == 'x' || ch == 'y') return false;
+    private final boolean cvc(int i) {
+        if (i < 2 || !cons(i) || cons(i-1) || !cons(i-2))
+            return false;
+        {
+            int ch = b[i];
+            return ch != 'w' && ch != 'x' && ch != 'y';
         }
-        return true;
     }
 
-    private final boolean ends(String s)
-    {  int l = s.length();
+    private final boolean ends(String s) {
+        int l = s.length();
         int o = k-l+1;
-        if (o < 0) return false;
-        for (int i = 0; i < l; i++) if (b[o+i] != s.charAt(i)) return false;
+        if (o < 0)
+            return false;
+        for (int i = 0; i < l; i++)
+            if (b[o+i] != s.charAt(i))
+                return false;
         j = k-l;
         return true;
     }
@@ -199,10 +217,11 @@ class Stemmer
    /* setto(s) sets (j+1),...k to the characters in the string s, readjusting
       k. */
 
-    private final void setto(String s)
-    {  int l = s.length();
+    private final void setto(String s) {
+        int l = s.length();
         int o = j+1;
-        for (int i = 0; i < l; i++) b[o+i] = s.charAt(i);
+        for (int i = 0; i < l; i++)
+            b[o+i] = s.charAt(i);
         k = j+l;
     }
 
@@ -232,25 +251,37 @@ class Stemmer
 
    */
 
-    private final void step1()
-    {  if (b[k] == 's')
-    {  if (ends("sses")) k -= 2; else
-    if (ends("ies")) setto("i"); else
-    if (b[k-1] != 's') k--;
-    }
-        if (ends("eed")) { if (m() > 0) k--; } else
-        if ((ends("ed") || ends("ing")) && vowelinstem())
-        {  k = j;
-            if (ends("at")) setto("ate"); else
-            if (ends("bl")) setto("ble"); else
-            if (ends("iz")) setto("ize"); else
-            if (doublec(k))
-            {  k--;
-                {  int ch = b[k];
-                    if (ch == 'l' || ch == 's' || ch == 'z') k++;
+    private final void step1() {
+        if (b[k] == 's') {
+            if (ends("sses"))
+                k -= 2;
+            else if (ends("ies"))
+                setto("i");
+            else if (b[k-1] != 's')
+                k--;
+        }
+        if (ends("eed")) {
+            if (m() > 0)
+                k--;
+        } else if ((ends("ed") || ends("ing")) && vowelinstem())
+        {
+            k = j;
+            if (ends("at"))
+                setto("ate");
+            else if (ends("bl"))
+                setto("ble");
+            else if (ends("iz"))
+                setto("ize");
+            else if (doublec(k)) {
+                k--;
+                {               //this block is work if there are doublec() return true
+                    int ch = b[k];
+                    if (ch == 'l' || ch == 's' || ch == 'z')
+                        k++;
                 }
             }
-            else if (m() == 1 && cvc(k)) setto("e");
+            else if (m() == 1 && cvc(k))
+                setto("e");
         }
     }
 
@@ -358,10 +389,13 @@ class Stemmer
      * from the input.  You can retrieve the result with
      * getResultLength()/getResultBuffer() or toString().
      */
-    public void stem()
-    {  k = i - 1;
-        if (k > 1) { step1(); step2(); step3(); step4(); step5(); step6(); }
-        i_end = k+1; i = 0;
+    public void stem() {
+        k = i - 1;
+        if (k > 1) {
+            step1(); step2(); step3(); step4(); step5(); step6();
+        }
+        i_end = k+1;
+        i = 0;
     }
 
     /** Test program for demonstrating the Stemmer.  It reads text from a
@@ -389,7 +423,7 @@ class Stemmer
                             j++;
                         if(index<line.length())
                             ch = line.charAt(index++);
-                        else
+                        else                //End of line
                             break;
                         if (!Character.isLetter((char) ch)) {
                             /* to test add(char ch) */
