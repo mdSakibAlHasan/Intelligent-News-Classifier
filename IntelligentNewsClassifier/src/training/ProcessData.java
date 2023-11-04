@@ -23,9 +23,9 @@ public class ProcessData {
             }
             sc.close();
 
-            for(i=0;i<3;i++){
-                System.out.println(data[i][0]+" ## "+data[i][1]+" "+data[i][2]+"----------------------------------");
-            }
+//            for(i=0;i<3;i++){
+//                System.out.println(data[i][0]+" ## "+data[i][1]+" "+data[i][2]+"----------------------------------");
+//            }
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -68,6 +68,7 @@ public class ProcessData {
 
     public static void process(ProcessData processData) {
         for(int i=0;i<3;i++){
+            System.out.println("Text without processing:" +  processData.data[i][1]);
             processData.removeTags(i);
             processData.removePunctuationsSpecialCharsNumbers(i);
             processData.convertToLower(i);
