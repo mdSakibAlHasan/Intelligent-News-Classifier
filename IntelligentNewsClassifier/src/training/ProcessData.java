@@ -4,9 +4,9 @@ import java.io.File;
 import java.util.*;
 
 public class ProcessData {
-    String[][] data = new String[1500][3];
+    static String[][] data = new String[1500][3];
     Stemmer stemmer = new Stemmer();
-    private  void readCSV(String file){
+    private  void readCSV(String file, int size){
         try {
             Scanner sc = new Scanner(new File(file));
             String line;
@@ -16,7 +16,7 @@ public class ProcessData {
             {
                 line = sc.nextLine();
                 data[i] = line.split(",");
-                if(i<3)
+                if(i<size)
                     i++;
                 else
                     break;
@@ -66,8 +66,8 @@ public class ProcessData {
     }
 
 
-    public static void process(ProcessData processData) {
-        for(int i=0;i<3;i++){
+    public static void process(ProcessData processData, int size) {
+        for(int i=0;i<size;i++){
             System.out.println("Text without processing:" +  processData.data[i][1]);
             processData.removeTags(i);
             processData.removePunctuationsSpecialCharsNumbers(i);
@@ -80,9 +80,13 @@ public class ProcessData {
     }
 
     public static void main(String[] args) {
+        int size=30;
         ProcessData processData = new ProcessData();
-        processData.readCSV("BBC News Train.csv");
-        process(processData);
+        processData.readCSV("BBC News Train.csv",size);
+        process(processData,size);
+
+        FrequencyTableGenerate frequencyTableGenerate = new FrequencyTableGenerate();
+        frequencyTableGenerate.createFrequencyTable(data,size);
 
     }
 }
