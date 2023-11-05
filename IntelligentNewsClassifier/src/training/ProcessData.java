@@ -4,8 +4,9 @@ import java.io.File;
 import java.util.*;
 
 public class ProcessData {
-    String[][] data = new String[1500][3];
-    private  void readCSV(String file){
+    static String[][] data = new String[1500][3];
+    Stemmer stemmer = new Stemmer();
+    private  void readCSV(String file, int size){
         try {
             Scanner sc = new Scanner(new File(file));
             String line;
@@ -15,16 +16,16 @@ public class ProcessData {
             {
                 line = sc.nextLine();
                 data[i] = line.split(",");
-                if(i<3)
+                if(i<size)
                     i++;
                 else
                     break;
             }
             sc.close();
 
-            for(i=0;i<3;i++){
-                System.out.println(data[i][0]+" ## "+data[i][1]+" "+data[i][2]+"----------------------------------");
-            }
+//            for(i=0;i<3;i++){
+//                System.out.println(data[i][0]+" ## "+data[i][1]+" "+data[i][2]+"----------------------------------");
+//            }
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -60,20 +61,32 @@ public class ProcessData {
         data[index][1] = String.join(" ", filteredWords);
     }
 
-    public static void process(ProcessData processData) {
-        for(int i=0;i<3;i++){
+    public void stemming(int index){
+        data[index][1] =  stemmer.convertStemmer(data[index][1]);
+    }
+
+
+    public static void process(ProcessData processData, int size) {
+        for(int i=0;i<size;i++){
+            System.out.println("Text without processing:" +  processData.data[i][1]);
             processData.removeTags(i);
             processData.removePunctuationsSpecialCharsNumbers(i);
             processData.convertToLower(i);
             processData.removeStopwords(i);
+            processData.stemming(i);
 
-            System.out.println("Text wit processing: " +  processData.data[i][1]);
+            System.out.println("Text with processing: " +  processData.data[i][1]);
         }
     }
 
     public static void main(String[] args) {
+        int size=30;
         ProcessData processData = new ProcessData();
-        processData.readCSV("BBC News Train.csv");
-        process(processData);
+        processData.readCSV("BBC News Train.csv",size);
+        process(processData,size);
+
+        FrequencyTableGenerate frequencyTableGenerate = new FrequencyTableGenerate();
+        frequencyTableGenerate.createFrequencyTable(data,size);
+
     }
 }
