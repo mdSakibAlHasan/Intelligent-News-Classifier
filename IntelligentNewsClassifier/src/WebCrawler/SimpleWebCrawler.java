@@ -14,8 +14,6 @@ import com.opencsv.CSVWriter;
 import com.opencsv.CSVWriterBuilder;
 
 
-
-
 public class SimpleWebCrawler {
     public static void crawl (int level,String url,String requiredURL, ArrayList<String> visited){
         ArrayList<String> lList=  new ArrayList<String>();
@@ -73,8 +71,6 @@ public class SimpleWebCrawler {
                     csvWriter.writeNext(row);
                 }
 
-
-
                 v.add(url);
                 return doc;
             }
@@ -84,10 +80,5 @@ public class SimpleWebCrawler {
             return null;
         }
     }
-
-//    private static void printPageContent(Document doc) {
-//        String pageContent = doc.text(); // .html() for the HTML content.
-//        System.out.println("Page Content:\n" + pageContent);
-//    }
-
+    
 }
