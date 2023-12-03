@@ -18,7 +18,7 @@ public class SimpleWebCrawler {
     public static void crawl (int level,String url,String requiredURL, ArrayList<String> visited){
         ArrayList<String> lList=  new ArrayList<String>();
         if (url.contains(requiredURL)) {
-            if (level <= 5) {
+            if (level <= 2) {
                 Document doc = request(url, visited);
 
                 if (doc != null) {
@@ -26,7 +26,7 @@ public class SimpleWebCrawler {
                     for (Element link : links) {
                         String next_link = link.attr("href");
                         next_link="https://www.thedailystar.net"+next_link;
-                        if(visited.contains(next_link) == false && next_link.contains("/sports/")){
+                        if(visited.contains(next_link) == false && next_link.contains(requiredURL)){
                                 crawl(level++, next_link,requiredURL, visited);
 
                         }
@@ -71,6 +71,9 @@ public class SimpleWebCrawler {
                     // Write the data to the CSV file
                     if(url.contains("/sports")){
                         category="sports";
+                    }
+                    else if(url.contains("/entertainment")){
+                        category="entertainment";
                     }
                     String[] row = new String[]{formattedContent,category};
                     csvWriter.writeNext(row);
