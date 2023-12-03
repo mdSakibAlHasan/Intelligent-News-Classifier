@@ -48,6 +48,7 @@ public class NaiveBayes {
 
     public void calculation(FrequencyTableGenerate frequencyTableGenerate){
         int totalWord = 0;
+        int[] largeNumber = new int[10];
         for(int i=0;i<5;i++){
            totalWord += frequencyTableGenerate.eachCategoryWord[i];
         }
@@ -58,8 +59,19 @@ public class NaiveBayes {
             //System.out.println("Porbability is "+probability);
             for(String word: words){
                 probability *= (double)findWord(word,value,frequencyTableGenerate)/(double)frequencyTableGenerate.eachCategoryWord[value];
+                if(probability<1E-300){
+                    String valueAsString = String.valueOf(probability);
+                    int indexE = valueAsString.indexOf('E');
+                    if (indexE != -1 && indexE + 1 < valueAsString.length()) {
+                        String exponentPart = valueAsString.substring(indexE + 1);
+                        int exponent = Integer.parseInt(exponentPart);
+                        largeNumber[value] += exponent;
+                        probability = 1.0;
+                        //System.out.println("Exponent of the number: " + exponent);
+                    }
+                }
             }
-            System.out.println("Probability for "+category+" is "+probability);
+            System.out.println("Probability for "+category+" is "+probability+" and "+largeNumber[value]);
         });
 
     }
@@ -83,6 +95,8 @@ public class NaiveBayes {
 //        for(int i=0;i<5;i++){
 //            System.out.println(frequencyTableGenerate.eachCategoryWord[i]);
 //        }
+//        double smallestValue = Double.MIN_VALUE;
+//        System.out.println("Smallest positive non-zero value for double: " + smallestValue);
     }
 
 }
