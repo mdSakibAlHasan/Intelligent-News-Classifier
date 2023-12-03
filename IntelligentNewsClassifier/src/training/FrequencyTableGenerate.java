@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FrequencyTableGenerate implements Serializable {
-    Map<String, Integer> newsCategory = new HashMap<>();
-    int[] eachCategoryWord = new int[10];
-    Map<String, Map<Integer,Integer>> frequencyTable = new HashMap<>();
+    public Map<String, Integer> newsCategory = new HashMap<>();
+    public int[] eachCategoryWord = new int[10];
+    public Map<String, Map<Integer,Integer>> frequencyTable = new HashMap<>();
 
 
     public FrequencyTableGenerate(){
