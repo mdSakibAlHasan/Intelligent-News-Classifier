@@ -44,10 +44,12 @@ public class SimpleWebCrawler {
         try{
             Connection con =Jsoup.connect(url);
             Document doc = con.get();
+            String category=null;
             if(con.response().statusCode()==200){
 //                System.out.println("Dhuksee");
                 System.out.println("Link:" + url);
-                System.out.println(doc.title());
+
+//                System.out.println(doc.title());
 
                 //page content
                 Elements articleContent = doc.select("div strong > p:not(.title), div > p:not(.title)");
@@ -67,7 +69,10 @@ public class SimpleWebCrawler {
 //                    formattedContent = "\"" + formattedContent.replace("\"", "\"\"") + "\"";
 
                     // Write the data to the CSV file
-                    String[] row = new String[]{doc.title(), formattedContent};
+                    if(url.contains("/sports")){
+                        category="sports";
+                    }
+                    String[] row = new String[]{formattedContent,category};
                     csvWriter.writeNext(row);
                 }
 
@@ -80,5 +85,5 @@ public class SimpleWebCrawler {
             return null;
         }
     }
-    
+
 }
