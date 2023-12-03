@@ -55,7 +55,7 @@ public class NaiveBayes {
         int finalTotalWord = totalWord;
         frequencyTableGenerate.newsCategory.forEach((category, value)->{
             double probability= ((double)frequencyTableGenerate.eachCategoryWord[value]/ (double)finalTotalWord);
-            System.out.println("Porbability is "+probability);
+            //System.out.println("Porbability is "+probability);
             for(String word: words){
                 probability *= (double)findWord(word,value,frequencyTableGenerate)/(double)frequencyTableGenerate.eachCategoryWord[value];
             }
