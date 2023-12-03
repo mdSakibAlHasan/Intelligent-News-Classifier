@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class NaiveBayes {
+    int[] largeNumber = new int[10];
+    double[] prob = new double[10];
     public FrequencyTableGenerate getDataObject(){
         FrequencyTableGenerate frequencyTableGenerate= null;
         try
@@ -48,7 +50,6 @@ public class NaiveBayes {
 
     public void calculation(FrequencyTableGenerate frequencyTableGenerate){
         int totalWord = 0;
-        int[] largeNumber = new int[10];
         for(int i=0;i<5;i++){
            totalWord += frequencyTableGenerate.eachCategoryWord[i];
         }
@@ -60,20 +61,29 @@ public class NaiveBayes {
             for(String word: words){
                 probability *= (double)findWord(word,value,frequencyTableGenerate)/(double)frequencyTableGenerate.eachCategoryWord[value];
                 if(probability<1E-300){
-                    String valueAsString = String.valueOf(probability);
-                    int indexE = valueAsString.indexOf('E');
-                    if (indexE != -1 && indexE + 1 < valueAsString.length()) {
-                        String exponentPart = valueAsString.substring(indexE + 1);
-                        int exponent = Integer.parseInt(exponentPart);
-                        largeNumber[value] += exponent;
-                        probability = 1.0;
-                        //System.out.println("Exponent of the number: " + exponent);
-                    }
+                  probability = largeData(probability,value);
                 }
             }
-            System.out.println("Probability for "+category+" is "+probability+" and "+largeNumber[value]);
+            prob[value] = largeData(probability,value);
+            //System.out.println("Probability for "+category+" is "+probability+" and "+largeNumber[value]);
         });
 
+    }
+
+    public double largeData(double probability, int value){
+        String valueAsString = String.valueOf(probability);
+        int indexE = valueAsString.indexOf('E');
+        if (indexE != -1 && indexE + 1 < valueAsString.length()) {
+            String exponentPart = valueAsString.substring(indexE + 1);
+            String doublePart = valueAsString.substring(0,indexE-1);
+            int exponent = Integer.parseInt(exponentPart);
+            double doubleNumber = Double.parseDouble(doublePart);
+            largeNumber[value] += exponent;
+            //System.out.println("Double part is "+doubleNumber);
+            return doubleNumber;
+        }
+
+        return 1;
     }
 
     public ArrayList<String> formatUserInput(){
@@ -86,12 +96,39 @@ public class NaiveBayes {
         return words;
     }
 
+    public void probabilityCalculation(){
+        int max = Integer.MIN_VALUE;
+        for(int i=0;i<5;i++){           //find large number
+            if(largeNumber[i]>max){
+                max = largeNumber[i];
+            }
+        }
+        max *= -1;
+        for(int i=0;i<5;i++){
+           largeNumber[i] += max;
+        }
+
+        double total=0.0;
+        for(int i=0;i<5;i++){
+            //System.out.print(prob[i]+" "+largeNumber[i]+" ");
+            prob[i] *= Math.pow(10,largeNumber[i]);
+            total += prob[i];
+            //System.out.println(prob[i]);
+        }
+
+        for(int i=0;i<5;i++){
+            System.out.println("\n Probability is: "+prob[i]/total);
+        }
+
+    }
+
 
 
     public static void main(String[] args) {
         NaiveBayes naiveBayes = new NaiveBayes();
         FrequencyTableGenerate frequencyTableGenerate =  naiveBayes.getDataObject();
         naiveBayes.calculation(frequencyTableGenerate);
+        naiveBayes.probabilityCalculation();
 //        for(int i=0;i<5;i++){
 //            System.out.println(frequencyTableGenerate.eachCategoryWord[i]);
 //        }
