@@ -7,7 +7,6 @@ import java.util.Map;
 public class FrequencyTableGenerate {
     Map<String, Integer> newsCategory = new HashMap<>();
     Map<String, Map<Integer,Integer>> frequencyTable = new HashMap<>();
-    //ArrayList<ArrayList<Integer>> frequencyTable = new ArrayList<>();
 
 
     public FrequencyTableGenerate(){
@@ -36,28 +35,20 @@ public class FrequencyTableGenerate {
         frequencyTable.put(str,row);
     }
 
-    public void createFrequencyTable(String[][] data, int size){
-        for(int i=0;i<size;i++){
-            //System.out.println(data[i][2]+" "+newsCategory);
-            int category = newsCategory.get(data[i][2]);
-            System.out.println(category+" category "+data[i][2]);
-            String[] words = data[i][1].split(" ");
-            for(String word: words){
-                //System.out.print(":"+word);
-                addWord(word,category);
-            }
+
+
+    public void createFrequencyTable(ArrayList<String> line, String type){
+        for(String word: line){
+            int category = newsCategory.get(type);
+            //System.out.println(category+" category "+category);
+            addWord(word,category);
         }
+    }
+
+    public void printDetails(){
         System.out.println(frequencyTable.size());
         System.out.println(frequencyTable);
     }
 
-//    public static void main(String[] args) {
-//        FrequencyTableGenerate frequencyTableGenerate = new FrequencyTableGenerate();
-//        frequencyTableGenerate.initializeMap();
-//        frequencyTableGenerate.addWord("play",3);
-//        frequencyTableGenerate.addWord("play",3);
-//        frequencyTableGenerate.addWord("sds",3);
-//        System.out.println(frequencyTableGenerate.frequencyTable.size());
-//    }
 
 }
