@@ -2,7 +2,7 @@ package training;
 
 import steaming.Stemming;
 
-import java.io.File;
+import java.io.*;
 import java.util.*;
 
 public class ProcessData {
@@ -26,33 +26,27 @@ public class ProcessData {
             e.printStackTrace();
         }
 
-        frequencyTableGenerate.printDetails();
+       // frequencyTableGenerate.printDetails();
         frequencyTableGenerate.countEachCategoryWord();
     }
 
     public void serializeObject(){
-        Demo object = new Demo(1, "geeksforgeeks");
         String filename = "file.ser";
-        
+
         try
         {
-            //Saving of object in a file
             FileOutputStream file = new FileOutputStream(filename);
             ObjectOutputStream out = new ObjectOutputStream(file);
 
-            // Method for serialization of object
-            out.writeObject(object);
-
+            out.writeObject(frequencyTableGenerate);
             out.close();
             file.close();
 
             System.out.println("Object has been serialized");
 
-        }
 
-        catch(IOException ex)
-        {
-            System.out.println("IOException is caught");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -69,6 +63,8 @@ public class ProcessData {
     public static void main(String[] args) {
         ProcessData processData = new ProcessData();
         processData.readCSV("BBC News Train.csv");
+        processData.serializeObject();
+
 
     }
 }

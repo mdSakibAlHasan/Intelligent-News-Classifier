@@ -1,10 +1,11 @@
 package training;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FrequencyTableGenerate {
+public class FrequencyTableGenerate implements Serializable {
     Map<String, Integer> newsCategory = new HashMap<>();
     int[] eachCategoryWord = new int[10];
     Map<String, Map<Integer,Integer>> frequencyTable = new HashMap<>();
