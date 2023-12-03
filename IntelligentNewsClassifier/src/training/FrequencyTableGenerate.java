@@ -6,6 +6,7 @@ import java.util.Map;
 
 public class FrequencyTableGenerate {
     Map<String, Integer> newsCategory = new HashMap<>();
+    int[] eachCategoryWord = new int[10];
     Map<String, Map<Integer,Integer>> frequencyTable = new HashMap<>();
 
 
@@ -43,6 +44,23 @@ public class FrequencyTableGenerate {
             //System.out.println(category+" category "+category);
             addWord(word,category);
         }
+    }
+
+    public void countEachCategoryWord(){
+        frequencyTable.forEach((key, innerMap) -> {
+            //System.out.println("Key: " + key);
+
+            innerMap.forEach((innerKey, value) -> {
+                eachCategoryWord[innerKey] += value;
+                //System.out.println("Inner Key: " + innerKey + ", Value: " + value);
+            });
+        });
+
+        System.out.println("Total word for each category");
+        for(int i=0;i<5;i++){
+            System.out.println(eachCategoryWord[i]);
+        }
+
     }
 
     public void printDetails(){
