@@ -12,10 +12,10 @@ public class Stemming {
         for (String word : wordsArray) {
             root_word.add(porter_stemming_algo.apply_porter_stemming(word));
         }
-        for(String w : root_word)
-        {
-            System.out.print(w + " ");
-        }
+//        for(String w : root_word)
+//        {
+//            System.out.print(w + " ");
+//        }
         return root_word;
     }
 }

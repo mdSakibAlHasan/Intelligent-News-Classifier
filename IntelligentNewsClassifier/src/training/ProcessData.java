@@ -1,11 +1,14 @@
 package training;
 
+import steaming.Stemming;
+
 import java.io.File;
 import java.util.*;
 
 public class ProcessData {
     static String[][] data = new String[1500][3];
-    Stemmer stemmer = new Stemmer();
+    ArrayList<ArrayList<String>> wordList = new ArrayList<ArrayList<String>>();
+    Stemming stemming = new Stemming();
     private  void readCSV(String file, int size){
         try {
             Scanner sc = new Scanner(new File(file));
@@ -22,10 +25,6 @@ public class ProcessData {
                     break;
             }
             sc.close();
-
-//            for(i=0;i<3;i++){
-//                System.out.println(data[i][0]+" ## "+data[i][1]+" "+data[i][2]+"----------------------------------");
-//            }
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -62,7 +61,8 @@ public class ProcessData {
     }
 
     public void stemming(int index){
-        data[index][1] =  stemmer.convertStemmer(data[index][1]);
+        ArrayList<String> words =  stemming.stem(data[index][1]);
+        wordList.add(words);
     }
 
 
