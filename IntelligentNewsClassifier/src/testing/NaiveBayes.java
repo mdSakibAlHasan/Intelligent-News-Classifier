@@ -2,9 +2,7 @@ package testing;
 import steaming.Stemming;
 import training.FrequencyTableGenerate;
 
-import javax.swing.plaf.synth.SynthLookAndFeel;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
@@ -57,7 +55,6 @@ public class NaiveBayes {
         int finalTotalWord = totalWord;
         frequencyTableGenerate.newsCategory.forEach((category, value)->{
             double probability= ((double)frequencyTableGenerate.eachCategoryWord[value]/ (double)finalTotalWord);
-            //System.out.println("Porbability is "+probability);
             for(String word: words){
                 probability *= (double)findWord(word,value,frequencyTableGenerate)/(double)frequencyTableGenerate.eachCategoryWord[value];
                 if(probability<1E-300){
@@ -79,7 +76,7 @@ public class NaiveBayes {
             int exponent = Integer.parseInt(exponentPart);
             double doubleNumber = Double.parseDouble(doublePart);
             largeNumber[value] += exponent;
-            //System.out.println("Double part is "+doubleNumber);
+
             return doubleNumber;
         }
 
@@ -96,7 +93,7 @@ public class NaiveBayes {
         return words;
     }
 
-    public void probabilityCalculation(){
+    public double[] probabilityCalculation(){
         int max = Integer.MIN_VALUE;
         for(int i=0;i<5;i++){           //find large number
             if(largeNumber[i]>max){
@@ -110,16 +107,16 @@ public class NaiveBayes {
 
         double total=0.0;
         for(int i=0;i<5;i++){
-            //System.out.print(prob[i]+" "+largeNumber[i]+" ");
             prob[i] *= Math.pow(10,largeNumber[i]);
             total += prob[i];
-            //System.out.println(prob[i]);
         }
 
         for(int i=0;i<5;i++){
-            System.out.println("\n Probability is: "+prob[i]/total);
+            prob[i] /= total;
+            System.out.println("\n Probability is: "+prob[i]);
         }
 
+        return prob;
     }
 
 
@@ -129,11 +126,6 @@ public class NaiveBayes {
         FrequencyTableGenerate frequencyTableGenerate =  naiveBayes.getDataObject();
         naiveBayes.calculation(frequencyTableGenerate);
         naiveBayes.probabilityCalculation();
-//        for(int i=0;i<5;i++){
-//            System.out.println(frequencyTableGenerate.eachCategoryWord[i]);
-//        }
-//        double smallestValue = Double.MIN_VALUE;
-//        System.out.println("Smallest positive non-zero value for double: " + smallestValue);
     }
 
 }
