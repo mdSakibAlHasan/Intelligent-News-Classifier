@@ -18,7 +18,7 @@ public class SimpleWebCrawler {
     public static void crawl (int level,String url,String requiredURL, ArrayList<String> visited){
         ArrayList<String> lList=  new ArrayList<String>();
         if (url.contains(requiredURL)) {
-            if (level <= 2) {
+            if (level <= 6) {
                 Document doc = request(url, visited);
 
                 if (doc != null) {
@@ -61,7 +61,7 @@ public class SimpleWebCrawler {
 
 
                 //write on CSV file
-                try (FileWriter writer = new FileWriter("sportsNews.csv", true); // Open the file in append mode
+                try (FileWriter writer = new FileWriter("news.csv", true); // Open the file in append mode
                      CSVWriter csvWriter = new CSVWriter(writer)) {
 
                     // Format the news content
@@ -71,9 +71,14 @@ public class SimpleWebCrawler {
                     // Write the data to the CSV file
                     if(url.contains("/sports")){
                         category="sports";
-                    }
-                    else if(url.contains("/entertainment")){
+                    } else if(url.contains("/entertainment")){
                         category="entertainment";
+                    } else if (url.contains("/business")) {
+                        category="business";
+                    } else if(url.contains("/tech-startup")){
+                        category="tech-startup";
+                    } else if (url.contains("/news/bangladesh")) {
+                        category="politics";
                     }
                     String[] row = new String[]{formattedContent,category};
                     csvWriter.writeNext(row);

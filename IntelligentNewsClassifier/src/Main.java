@@ -14,6 +14,9 @@ public class Main {
         String baseUrl ="https://www.thedailystar.net";
 
         categoryList.add("/entertainment/");
+        categoryList.add("/news/bangladesh/");
+        categoryList.add("/tech-startup/");
+        categoryList.add("/business/");
         categoryList.add("/sports/");
 
 
@@ -24,11 +27,6 @@ public class Main {
             // Call your crawl method or perform any other action with the completeURL
             SimpleCrawl.crawl(1, completeURL, category, new ArrayList<String>());
         }
-
-//        String requiredURL = "/sports/";
-//
-//
-//        SimpleCrawl.crawl(1,baseUrl,requiredURL,new ArrayList<String>());
 
 
     }
