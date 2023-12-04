@@ -1,92 +1,70 @@
 package training;
 
-import java.io.File;
+import steaming.Stemming;
+
+import java.io.*;
 import java.util.*;
 
 public class ProcessData {
-    static String[][] data = new String[1500][3];
-    Stemmer stemmer = new Stemmer();
-    private  void readCSV(String file, int size){
+    Stemming stemming = new Stemming();
+    FrequencyTableGenerate frequencyTableGenerate = new FrequencyTableGenerate();
+    private  void readCSV(String file){
         try {
             Scanner sc = new Scanner(new File(file));
-            String line;
+            String lines;
             sc.nextLine();
             int i=0;
             while (sc.hasNext())
             {
-                line = sc.nextLine();
-                data[i] = line.split(",");
-                if(i<size)
-                    i++;
-                else
-                    break;
+                lines = sc.nextLine();
+                String[] words = lines.split(",");
+                stemming(words[1],words[2]);
             }
             sc.close();
-
-//            for(i=0;i<3;i++){
-//                System.out.println(data[i][0]+" ## "+data[i][1]+" "+data[i][2]+"----------------------------------");
-//            }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+
+       // frequencyTableGenerate.printDetails();
+        frequencyTableGenerate.countEachCategoryWord();
     }
 
-    public void removeTags(int index) {
-        String regex = "<[^>]*>";
-        data[index][1] = data[index][1].replaceAll(regex, "");
-    }
+    public void serializeObject(){
+        String filename = "file.ser";
 
-    public void removePunctuationsSpecialCharsNumbers(int index) {
-        // Use regular expression to remove punctuations, special characters, and numbers
-        String regex = "[^a-zA-Z\\s]";
-        data[index][1] = data[index][1].replaceAll(regex, "");
-    }
+        try
+        {
+            FileOutputStream file = new FileOutputStream(filename);
+            ObjectOutputStream out = new ObjectOutputStream(file);
 
-    public void convertToLower(int index) {
-        data[index][1] = data[index][1].toLowerCase();
-    }
+            out.writeObject(frequencyTableGenerate);
+            out.close();
+            file.close();
 
-    public void removeStopwords(int index) {
-        Set<String> stopWords = new HashSet<>(Arrays.asList("a", "an", "the", "and", "in", "on", "at", "to", "of", "for"));
-
-        String[] words = data[index][1].split("\\s");
-        List<String> filteredWords = new ArrayList<>();
-        for (String word : words) {
-            if (!stopWords.contains(word)) {
-                filteredWords.add(word);
-            }
-        }
-
-        data[index][1] = String.join(" ", filteredWords);
-    }
-
-    public void stemming(int index){
-        data[index][1] =  stemmer.convertStemmer(data[index][1]);
-    }
+            System.out.println("Object has been serialized");
 
 
-    public static void process(ProcessData processData, int size) {
-        for(int i=0;i<size;i++){
-            System.out.println("Text without processing:" +  processData.data[i][1]);
-            processData.removeTags(i);
-            processData.removePunctuationsSpecialCharsNumbers(i);
-            processData.convertToLower(i);
-            processData.removeStopwords(i);
-            processData.stemming(i);
-
-            System.out.println("Text with processing: " +  processData.data[i][1]);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
+
+
+    public void stemming(String line, String type){
+        ArrayList<String> words =  stemming.stem(line);
+        frequencyTableGenerate.createFrequencyTable(words,type);
+    }
+
+
+
+
 
     public static void main(String[] args) {
-        int size=30;
         ProcessData processData = new ProcessData();
-        processData.readCSV("BBC News Train.csv",size);
-        process(processData,size);
+        processData.readCSV("BBC News Train.csv");
+        processData.serializeObject();
 
-        FrequencyTableGenerate frequencyTableGenerate = new FrequencyTableGenerate();
-        frequencyTableGenerate.createFrequencyTable(data,size);
 
     }
 }
