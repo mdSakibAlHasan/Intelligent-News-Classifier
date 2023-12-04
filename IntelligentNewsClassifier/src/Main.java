@@ -9,10 +9,24 @@ public class Main {
 
 
         SimpleWebCrawler SimpleCrawl = new SimpleWebCrawler();
-        String requiredURL = "/sports/";
+        ArrayList<String> categoryList=  new ArrayList<String>();
 
-        String url ="https://www.thedailystar.net/sports/";
-        SimpleCrawl.crawl(1,url,requiredURL,new ArrayList<String>());
+        String baseUrl ="https://www.thedailystar.net";
+
+        categoryList.add("/entertainment/");
+        categoryList.add("/news/bangladesh/");
+        categoryList.add("/tech-startup/");
+        categoryList.add("/business/");
+        categoryList.add("/sports/");
+
+
+        for (String category : categoryList) {
+            // Combine baseUrl, category, and requiredURL to form the complete URL
+            String completeURL = baseUrl + category;
+
+            // Call your crawl method or perform any other action with the completeURL
+            SimpleCrawl.crawl(1, completeURL, category, new ArrayList<String>());
+        }
 
 
     }

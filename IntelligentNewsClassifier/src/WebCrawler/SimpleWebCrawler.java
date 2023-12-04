@@ -14,13 +14,11 @@ import com.opencsv.CSVWriter;
 import com.opencsv.CSVWriterBuilder;
 
 
-
-
 public class SimpleWebCrawler {
     public static void crawl (int level,String url,String requiredURL, ArrayList<String> visited){
         ArrayList<String> lList=  new ArrayList<String>();
         if (url.contains(requiredURL)) {
-            if (level <= 5) {
+            if (level <= 6) {
                 Document doc = request(url, visited);
 
                 if (doc != null) {
@@ -28,7 +26,7 @@ public class SimpleWebCrawler {
                     for (Element link : links) {
                         String next_link = link.attr("href");
                         next_link="https://www.thedailystar.net"+next_link;
-                        if(visited.contains(next_link) == false && next_link.contains("/sports/")){
+                        if(visited.contains(next_link) == false && next_link.contains(requiredURL)){
                                 crawl(level++, next_link,requiredURL, visited);
 
                         }
@@ -46,10 +44,12 @@ public class SimpleWebCrawler {
         try{
             Connection con =Jsoup.connect(url);
             Document doc = con.get();
+            String category=null;
             if(con.response().statusCode()==200){
 //                System.out.println("Dhuksee");
                 System.out.println("Link:" + url);
-                System.out.println(doc.title());
+
+//                System.out.println(doc.title());
 
                 //page content
                 Elements articleContent = doc.select("div strong > p:not(.title), div > p:not(.title)");
@@ -61,7 +61,7 @@ public class SimpleWebCrawler {
 
 
                 //write on CSV file
-                try (FileWriter writer = new FileWriter("sportsNews.csv", true); // Open the file in append mode
+                try (FileWriter writer = new FileWriter("news.csv", true); // Open the file in append mode
                      CSVWriter csvWriter = new CSVWriter(writer)) {
 
                     // Format the news content
@@ -69,11 +69,20 @@ public class SimpleWebCrawler {
 //                    formattedContent = "\"" + formattedContent.replace("\"", "\"\"") + "\"";
 
                     // Write the data to the CSV file
-                    String[] row = new String[]{doc.title(), formattedContent};
+                    if(url.contains("/sports")){
+                        category="sports";
+                    } else if(url.contains("/entertainment")){
+                        category="entertainment";
+                    } else if (url.contains("/business")) {
+                        category="business";
+                    } else if(url.contains("/tech-startup")){
+                        category="tech-startup";
+                    } else if (url.contains("/news/bangladesh")) {
+                        category="politics";
+                    }
+                    String[] row = new String[]{formattedContent,category};
                     csvWriter.writeNext(row);
                 }
-
-
 
                 v.add(url);
                 return doc;
@@ -84,10 +93,5 @@ public class SimpleWebCrawler {
             return null;
         }
     }
-
-//    private static void printPageContent(Document doc) {
-//        String pageContent = doc.text(); // .html() for the HTML content.
-//        System.out.println("Page Content:\n" + pageContent);
-//    }
 
 }
