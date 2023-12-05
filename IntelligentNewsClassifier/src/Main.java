@@ -17,6 +17,7 @@ public class Main {
 
 //        String baseUrl ="https://www.thedailystar.net";
 
+        
 //        categoryList.add("/bangladesh/politics/");
         categoryList.add("/news/world/");
         categoryList.add("/entertainment/");
