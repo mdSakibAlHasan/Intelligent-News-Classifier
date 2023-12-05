@@ -11,8 +11,14 @@ public class Main {
         SimpleWebCrawler SimpleCrawl = new SimpleWebCrawler();
         ArrayList<String> categoryList=  new ArrayList<String>();
 
-        String baseUrl ="https://www.thedailystar.net";
+        ArrayList<String> BaseUrl = new ArrayList<>();
+//        BaseUrl.add("https://www.dhakatribune.com");
+        BaseUrl.add("https://www.thedailystar.net");
 
+//        String baseUrl ="https://www.thedailystar.net";
+
+//        categoryList.add("/bangladesh/politics/");
+        categoryList.add("/news/world/");
         categoryList.add("/entertainment/");
         categoryList.add("/news/bangladesh/");
         categoryList.add("/tech-startup/");
@@ -20,13 +26,17 @@ public class Main {
         categoryList.add("/sports/");
 
 
-        for (String category : categoryList) {
-            // Combine baseUrl, category, and requiredURL to form the complete URL
-            String completeURL = baseUrl + category;
+        for(String baseUrl : BaseUrl){
+            for (String category : categoryList) {
+                // Combine baseUrl, category, and requiredURL to form the complete URL
+                String completeURL = baseUrl + category;
 
-            // Call your crawl method or perform any other action with the completeURL
-            SimpleCrawl.crawl(1, completeURL, category, new ArrayList<String>());
+                // Call your crawl method or perform any other action with the completeURL
+                SimpleCrawl.crawl(1, completeURL, category, new ArrayList<String>());
+            }
         }
+
+
 
 
     }

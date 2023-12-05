@@ -69,7 +69,7 @@ public class SimpleWebCrawler {
 //                    formattedContent = "\"" + formattedContent.replace("\"", "\"\"") + "\"";
 
                     // Write the data to the CSV file
-                    if(url.contains("/sports")){
+                    if(url.contains("/sport")){
                         category="sports";
                     } else if(url.contains("/entertainment")){
                         category="entertainment";
@@ -77,7 +77,7 @@ public class SimpleWebCrawler {
                         category="business";
                     } else if(url.contains("/tech-startup")){
                         category="tech-startup";
-                    } else if (url.contains("/news/bangladesh")) {
+                    } else if (url.contains("/news/bangladesh") || url.contains("/news/world")) {
                         category="politics";
                     }
                     String[] row = new String[]{formattedContent,category};
