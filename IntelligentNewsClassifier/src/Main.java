@@ -1,6 +1,10 @@
 import WebCrawler.SimpleWebCrawler;
 
 import java.awt.image.AreaAveragingScaleFilter;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Main {
@@ -38,7 +42,26 @@ public class Main {
         }
 
 
+        String inputFilePath = "news.csv";
+        String outputFilePath = "news2.csv";
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFilePath));
+             FileWriter writer = new FileWriter(outputFilePath)) {
 
+            String line;
+            while ((line = reader.readLine()) != null) {
+//                System.out.println("Dhukse");
+                // Remove commas from each line
+                String cleanedLine = line.replace(",", "");
 
+                // Write the cleaned line to the output file
+                writer.write(cleanedLine + "\n");
+            }
+
+            System.out.println("Commas removed and new CSV written to " + outputFilePath);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
     }
 }
