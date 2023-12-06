@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" prefHeight="516.0" prefWidth="840.0" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.newspaperclassification.HelloController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+   <Label prefHeight="57.0" prefWidth="177.0" text="Input your news">
+      <font>
+         <Font name="Bookman Old Style Bold Italic" size="18.0" />
+      </font>
+   </Label>
+   <TextArea fx:id="textArea" onInputMethodTextChanged="#textFieldController" onKeyPressed="#textFieldController" prefHeight="200.0" prefWidth="200.0" />
+
+    <Label fx:id="welcomeText" />
+    <Button alignment="CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" onAction="#onClassifyButtonClick" prefHeight="46.0" prefWidth="96.0" text="Classify" textAlignment="CENTER">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font></Button>
+   <Label fx:id="classificationLabel" alignment="CENTER" lineSpacing="10.0" prefHeight="47.0" prefWidth="173.0">
+      <font>
+         <Font name="Bodoni MT Bold" size="24.0" />
+      </font>
+      <VBox.margin>
+         <Insets bottom="20.0" right="20.0" />
+      </VBox.margin>
+   </Label>
+   <HBox>
+      <children>
+         <CheckBox fx:id="checkBox" mnemonicParsing="false" onAction="#addTrainingSectionCheckBox" onKeyPressed="#addTrainingSectionCheckBox" text="Satisfy with this classification" />
+         <ChoiceBox fx:id="choiceId" onInputMethodTextChanged="#checkboxController" onKeyPressed="#checkboxController" onKeyTyped="#checkboxController" prefWidth="150.0" />
+      </children>
+      <VBox.margin>
+         <Insets bottom="20.0" left="20.0" right="20.0" />
+      </VBox.margin>
+      <padding>
+         <Insets left="20.0" />
+      </padding>
+   </HBox>
+</VBox>
